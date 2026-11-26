@@ -1,0 +1,22 @@
+[build]
+  # This repo has two separate services (see vercel.json): the root is the
+  # Vite/React frontend, and server/ is a standalone Express + Prisma API.
+  # Netlify should only build and host the static frontend — the backend
+  # needs a Node server + Postgres and belongs on Render/Railway instead
+  # (see server/render.yaml and server/railway.json).
+  command = "npm run build"
+  publish = "dist"
+
+# IMPORTANT: the contact form calls the backend API. Set the Netlify environment
+# variable VITE_API_URL to your deployed backend, e.g.
+#   VITE_API_URL = https://<your-api-host>/api
+# then redeploy (it is baked in at build time). If it is unset the form posts to
+# this site's own /api/inquiries and gets a 404. See DEPLOY-NETLIFY-RENDER.md.
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

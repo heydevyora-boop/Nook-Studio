@@ -1,0 +1,27 @@
+node_modules
+dist
+dist-ssr
+*.local
+.DS_Store
+.env
+.env.local
+*.tsbuildinfo
+
+# server
+server/node_modules
+server/dist
+server/.env
+server/*.tsbuildinfo
+
+# Google service-account keys & other credentials — never commit these
+*service-account*.json
+# Google's default download name: <project-id>-<12 hex chars>.json
+*-????????????.json
+*-credentials.json
+credentials.json
+google-*.json
+*.pem
+server/.env.*
+!server/.env.example
+.env.*
+!.env.example

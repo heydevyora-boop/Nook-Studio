@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: #f7f3ed;
+  color: #261711;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Offsets anchored sections so the sticky header never covers their heading */
+.section-anchor {
+  scroll-margin-top: 6rem;
+}
+
+.font-serif-editorial {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+/* Arched silhouette used for the hero image. Below the `lg` breakpoint the
+   image sits inside the normal padded column (not full-bleed), so it keeps
+   a symmetric dome; only once it goes edge-to-edge at `lg` does the right
+   corner square off flush with the viewport edge. */
+.arch-mask {
+  border-top-left-radius: 260px;
+  border-top-right-radius: 260px;
+}
+
+@media (min-width: 1024px) {
+  .arch-mask {
+    border-top-right-radius: 0;
+  }
+}
+
+::selection {
+  background-color: #b87247;
+  color: #f7f3ed;
+}

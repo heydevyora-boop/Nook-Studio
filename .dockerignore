@@ -1,0 +1,22 @@
+# Build context is the repo root (see server/docker-compose.yml), since the
+# backend is an npm workspace member and needs the root package-lock.json.
+node_modules
+**/node_modules
+dist
+**/dist
+.env
+.env.*
+!**/.env.example
+npm-debug.log
+*.tsbuildinfo
+.git
+.gitignore
+README.md
+server/README.md
+*service-account*.json
+# Google's default download name: <project-id>-<12 hex chars>.json
+*-????????????.json
+*-credentials.json
+credentials.json
+google-*.json
+*.pem

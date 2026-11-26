@@ -1,0 +1,46 @@
+# Local development convenience stack: Postgres + the API, both containerized.
+# Usage:
+#   cp .env.example .env   # then fill in real secrets
+#   docker compose up --build
+#
+# For VPS deployment, point DATABASE_URL at a managed/external Postgres
+# instead, or keep the `db` service and persist its volume.
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: nookk_studio
+    ports:
+      - '5432:5432'
+    volumes:
+      - nookk_studio_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      # Repo root, not this directory — the backend is an npm workspace
+      # member, so the build needs the root package-lock.json too.
+      context: ..
+      dockerfile: server/Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      # Overrides .env so the API talks to the `db` service by name,
+      # regardless of what DATABASE_URL in .env points to for local (non-Docker) use.
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/nookk_studio?schema=public
+    ports:
+      - '4000:4000'
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  nookk_studio_pgdata:
