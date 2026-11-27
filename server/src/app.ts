@@ -39,3 +39,10 @@ export function createApp() {
 
   return app
 }
+
+// Vercel's Express framework builder loads this file directly as the
+// serverless handler and requires a default export that is the Express app
+// itself (an Express app is callable as `(req, res) => ...`, satisfying its
+// "function or server" requirement). `index.ts` still uses the named
+// `createApp` export for traditional `app.listen()` deployments (Docker/Render).
+export default createApp()
