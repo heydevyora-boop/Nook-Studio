@@ -71,22 +71,25 @@ export const inquiriesService = {
       throw error
     }
 
-    // Fire-and-forget: a slow/failed email must never block or fail the
-    // visitor's form submission. Each is independent so one failing
-    // (e.g. a bad client address) never prevents the other from sending.
-    void sendMail({
-      to: input.email,
-      subject: 'We received your inquiry — NOOKK STUDIO',
-      html: buildClientConfirmationEmail(input),
-    })
-
-    if (env.STUDIO_NOTIFICATION_EMAIL) {
-      void sendMail({
-        to: env.STUDIO_NOTIFICATION_EMAIL,
-        subject: `New inquiry from ${input.name}`,
-        html: buildAdminNotificationEmail(input),
-      })
-    }
+    // Awaited (not fire-and-forget): serverless hosts (Vercel) can freeze the
+    // function the instant the response is sent, killing any still-pending
+    // promise — an un-awaited send often never actually leaves the process.
+    // sendMail() already swallows its own errors, so one bad address/provider
+    // outage still can't fail the visitor's submission or block the other email.
+    await Promise.allSettled([
+      sendMail({
+        to: input.email,
+        subject: 'We received your inquiry — NOOKK STUDIO',
+        html: buildClientConfirmationEmail(input),
+      }),
+      env.STUDIO_NOTIFICATION_EMAIL
+        ? sendMail({
+            to: env.STUDIO_NOTIFICATION_EMAIL,
+            subject: `New inquiry from ${input.name}`,
+            html: buildAdminNotificationEmail(input),
+          })
+        : Promise.resolve(),
+    ])
 
     // Mirror to Google Sheets. PostgreSQL already has the inquiry, so this can
     // never fail the visitor's submission: failures are recorded on the row and
