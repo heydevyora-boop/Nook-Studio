@@ -7,16 +7,26 @@ interface LotusIconProps {
  * Lotus artwork supplied for the "Design Consultation" service tile — the
  * lotus is a traditional sign of clarity and prosperity. `strokeWidth` is
  * accepted (and ignored) so this drops in anywhere a lucide-react icon is
- * expected. Scaled up and forced to pure black so it reads with the same
- * weight as the other (stroke-based) service icons.
+ * expected. Rendered as a CSS mask filled with `currentColor` (instead of
+ * an <img>) so it picks up the same `group-hover:text-brand-accent` hover
+ * color the stroke-based icons get.
  */
 export default function LotusIcon({ className }: LotusIconProps) {
   return (
-    <img
-      src="/icons/lotus.png"
-      alt=""
+    <span
+      role="img"
       aria-hidden="true"
-      className={`${className ?? ''} scale-125 brightness-0`}
+      className={`${className ?? ''} scale-125 inline-block bg-current transition-colors`}
+      style={{
+        maskImage: "url('/icons/lotus.png')",
+        WebkitMaskImage: "url('/icons/lotus.png')",
+        maskRepeat: 'no-repeat',
+        WebkitMaskRepeat: 'no-repeat',
+        maskPosition: 'center',
+        WebkitMaskPosition: 'center',
+        maskSize: 'contain',
+        WebkitMaskSize: 'contain',
+      }}
     />
   )
 }
