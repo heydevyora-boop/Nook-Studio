@@ -31,6 +31,18 @@ body {
   border-top-right-radius: 260px;
 }
 
+/* Below `md` the image column is narrow enough that the fixed 260px radius
+   (sized for the wider desktop image) exceeds half its width/height,
+   collapsing the arch into an oversized, distorted dome. Scaling the
+   radius with the element's own box keeps the same proportioned arch seen
+   on desktop at any phone width. */
+@media (max-width: 767px) {
+  .arch-mask {
+    border-top-left-radius: 38%;
+    border-top-right-radius: 38%;
+  }
+}
+
 @media (min-width: 1024px) {
   .arch-mask {
     border-top-right-radius: 0;
